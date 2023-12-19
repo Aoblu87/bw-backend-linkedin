@@ -3,15 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "__aggiungo-type__":"aggiungo type:module",
-
   "type":"module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-  "__modifico-dev__":"nodemon: per far partire il server ogni volta che c'è un salvataggio; -r dotenv/config per permettere al progetto di leggere il file .env",
 
     "dev": "nodemon -r dotenv/config src/index.js ",
-    "__deployment__": "aggiungo script build:exit 0 e start:node src/index.js per fare partire deployment",
     "start": "node src/index.js",
     "build": "exit 0"
 

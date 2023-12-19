@@ -1,10 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
+import apiRouter from "./routers/apiRouter.js";
 // import list from "express-list-endpoints"
 
 const server = express();
 
 const port = 3025;
+
+//Router API per tutte le rotte
+server.use = ("/api", apiRouter);
 
 server.get("/health", function (req, res) {
   res.status(200).send();
