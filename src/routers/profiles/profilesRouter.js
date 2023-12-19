@@ -117,4 +117,19 @@ profilesRouter.post("/session", async (req, res, next) => {
 profilesRouter.delete("/session", async (req, res) => {});
 // Logout
 
+//DELETE - cancella un utente specifico
+profilesRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+    if (!deletedUser) {
+      res.status(404).send();
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default profilesRouter;
