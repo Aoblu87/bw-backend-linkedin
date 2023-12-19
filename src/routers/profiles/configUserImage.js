@@ -6,7 +6,7 @@ export default multer({
   storage: new CloudinaryStorage({
     cloudinary,
     params: {
-      folder: "image",
+      folder: "photo",
     },
   }),
-}).single("image");
+}).single("photo");

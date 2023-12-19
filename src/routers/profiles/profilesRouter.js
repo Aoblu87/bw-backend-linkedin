@@ -3,6 +3,7 @@ import express from "express";
 import { User } from "../../models/users.js";
 import { v2 as cloudinary } from "cloudinary";
 import cloudinaryUploader from "./configUserImage.js";
+import checkJwt from "../../middlewares/checkJwt.js";
 
 const profilesRouter = express.Router();
 
@@ -15,6 +16,12 @@ profilesRouter.get("/", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+//GET - ritorna l'utente autenticato
+
+profilesRouter.get("/:id", checkJwt, async (req, res) => {
+  res.status(200).json(req.author);
 });
 
 //POST-----Aggiungi un utente e fai HASHING della password
@@ -54,14 +61,14 @@ profilesRouter.post("/", async (req, res) => {
 
 //PATCH - aggiunge l'immagine di un utente specifico
 profilesRouter.patch(
-  "/:id/image",
+  "/:id/photo",
   cloudinaryUploader,
   async (req, res, next) => {
     try {
       console.log(req.file);
       let updatedImage = await User.findByIdAndUpdate(
         req.params.id,
-        { avatar: req.file.path },
+        { photo: req.file.path },
         { new: true }
       );
       res.send(updatedImage);
