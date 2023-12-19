@@ -78,7 +78,7 @@ profilesRouter.patch(
   }
 );
 
-//PUT - modifica un autore specifico
+//PUT - modifica un utente specifico
 profilesRouter.put("/:id", async (req, res, next) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -89,5 +89,32 @@ profilesRouter.put("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+// Authentication - Autenticazione
+// il processo di verifica dell'identità di un utente
+profilesRouter.post("/session", async (req, res, next) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordCorrect) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const payload = { id: user._id };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+  res.status(200).json({ userId: user._id, token });
+});
+
+profilesRouter.delete("/session", async (req, res) => {});
+// Logout
 
 export default profilesRouter;

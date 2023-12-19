@@ -17,6 +17,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+  },
   country: {
     type: String,
   },
