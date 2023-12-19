@@ -26,6 +26,6 @@
     "passport-jwt": "^4.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemod": "^3.0.6"
   }
 }
