@@ -1,13 +1,13 @@
 import express from "express";
 import { User } from "../../models/users.js";
 
-const profileRouter = express.Router();
+const profilesRouter = express.Router();
 
-profileRouter.use(express.json());
+profilesRouter.use(express.json());
 
 //POST-----Aggiungi un utentee fai HASHING della password
 
-profileRouter.post("/", async (req, res) => {
+profilesRouter.post("/", async (req, res) => {
   try {
     const { email } = req.body;
     //cercao se esiste già un utente con la stessa email
@@ -40,4 +40,4 @@ profileRouter.post("/", async (req, res) => {
   }
 });
 
-export default profileRouter;
+export default profilesRouter;

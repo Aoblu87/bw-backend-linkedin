@@ -1,10 +1,10 @@
 import express from "express";
-import profileRouter from "./profile/profileRouter.js";
+import profilesRouter from "./profiles/profilesRouter.js";
 
 const apiRouter = express.Router();
 apiRouter.use(express.json());
 
 //Rotta /profile
-apiRouter.use("/profile", profileRouter);
+apiRouter.use("/profile", profilesRouter);
 
 export default apiRouter;
