@@ -1,10 +1,12 @@
 import bcrypt from "bcrypt";
 import express from "express";
 import { User } from "../../models/users.js";
+import { v2 as cloudinary } from "cloudinary";
+import cloudinaryUploader from "./configUserImage.js";
 
 const profilesRouter = express.Router();
 
-//POST-----Aggiungi un utentee fai HASHING della password
+//POST-----Aggiungi un utente e fai HASHING della password
 
 profilesRouter.post("/", async (req, res) => {
   try {
@@ -39,4 +41,27 @@ profilesRouter.post("/", async (req, res) => {
   }
 });
 
+<<<<<<< Updated upstream:src/routers/profiles/profilesRouter.js
 export default profilesRouter;
+=======
+//PATCH - aggiunge l'immagine di un utente specifico
+profileRouter.patch(
+  "/:id/image",
+  cloudinaryUploader,
+  async (req, res, next) => {
+    try {
+      console.log(req.file);
+      let updatedImage = await User.findByIdAndUpdate(
+        req.params.id,
+        { avatar: req.file.path },
+        { new: true }
+      );
+      res.send(updatedImage);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+export default profileRouter;
+>>>>>>> Stashed changes:src/routers/profile/profileRouter.js
