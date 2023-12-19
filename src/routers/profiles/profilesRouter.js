@@ -41,11 +41,8 @@ profilesRouter.post("/", async (req, res) => {
   }
 });
 
-<<<<<<< Updated upstream:src/routers/profiles/profilesRouter.js
-export default profilesRouter;
-=======
 //PATCH - aggiunge l'immagine di un utente specifico
-profileRouter.patch(
+profilesRouter.patch(
   "/:id/image",
   cloudinaryUploader,
   async (req, res, next) => {
@@ -63,5 +60,16 @@ profileRouter.patch(
   }
 );
 
-export default profileRouter;
->>>>>>> Stashed changes:src/routers/profile/profileRouter.js
+//PUT - modifica un autore specifico
+profilesRouter.put("/:id", async (req, res, next) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default profilesRouter;
