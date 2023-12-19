@@ -6,12 +6,23 @@ import cloudinaryUploader from "./configUserImage.js";
 
 const profilesRouter = express.Router();
 
+//GET - ritorna tutti gli utenti
+
+profilesRouter.get("/", async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
 //POST-----Aggiungi un utente e fai HASHING della password
 
 profilesRouter.post("/", async (req, res) => {
   try {
     const { email } = req.body;
-    //cercao se esiste già un utente con la stessa email
+    //cerca se esiste già un utente con la stessa email
     const user = await User.findOne({ email });
     if (user) {
       return res.status(400).send({ message: "Email already exists" });
@@ -22,7 +33,7 @@ profilesRouter.post("/", async (req, res) => {
       ...req.body,
       password,
     });
-    // Rimuov0 il campo 'password' prima di inviarlo nella risposta
+    // Rimuovo il campo 'password' prima di inviarlo nella risposta
     const userWithoutPassword = {
       _id: newUser._id,
       firstName: newUser.firstName,
