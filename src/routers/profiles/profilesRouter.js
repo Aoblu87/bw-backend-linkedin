@@ -10,7 +10,7 @@ const profilesRouter = express.Router();
 
 profilesRouter.get("/", async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select("-password");
     res.json(users);
   } catch (error) {
     next(error);
