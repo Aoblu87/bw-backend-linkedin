@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
 import express from "express";
-import { User } from "../../models/users.js";
-import { v2 as cloudinary } from "cloudinary";
-import cloudinaryUploader from "./configUserImage.js";
 import checkJwt from "../../middlewares/checkJwt.js";
+import cloudinaryUploader from "../../middlewares/uploadFile.js";
+import { User } from "../../models/users.js";
 
 const profilesRouter = express.Router();
 
