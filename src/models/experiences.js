@@ -44,6 +44,9 @@ const ExperienceSchema = new Schema({
   description: {
     type: "string",
   },
+  image: {
+    type: "string",
+  },
 });
 
-export const Experince = mongoose.model("experiences", ExperienceSchema);
+export const Experience = mongoose.model("experiences", ExperienceSchema);
