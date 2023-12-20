@@ -1,12 +1,13 @@
 import express from "express";
 
+
 const experienceRouter = express.Router();
 
 /* GET - ritorna l'esperienze di tutti gli utenti */
 experienceRouter.get('/:userid', async (req, res) => {
     try {
-        const authors = await experience.findByUserId(req.params.userid);
-        res.json(authors);
+        const experience = await experience.findByUserId(req.params.userid);
+        res.json(experience);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
