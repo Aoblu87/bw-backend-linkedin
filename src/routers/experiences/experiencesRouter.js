@@ -1,5 +1,6 @@
 import express from "express";
 import { Experience } from "../../models/experiences.js";
+import cloudinaryUploader from "../../middlewares/uploadFile.js";
 
 const experiencesRouter = express.Router();
 
@@ -20,7 +21,7 @@ experiencesRouter.post("/", async (req, res, next) => {
 //PATCH - aggiunge un'immagine all'esperienza
 experiencesRouter.patch(
   "/:id/image",
-  uploadFile.single("image"),
+  cloudinaryUploader,
   async (req, res, next) => {
     try {
       console.log(req.file);

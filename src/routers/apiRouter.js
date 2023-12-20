@@ -1,5 +1,6 @@
 import express from "express";
 import profilesRouter from "./profiles/profilesRouter.js";
+import experiencesRouter from "./experiences/experiencesRouter.js";
 import cors from "cors";
 
 const apiRouter = express.Router();
