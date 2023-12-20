@@ -40,4 +40,35 @@ experiencesRouter.patch(
   }
 );
 
+//PUT - modifica un'esperienza specifica
+experiencesRouter.put("/:id", async (req, res, next) => {
+  try {
+    const updatedExperience = await Experience.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.json(updatedExperience);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//DELETE - elimina un'esperienza specifica
+experiencesRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const deletedExperience = await Experience.findByIdAndDelete(req.params.id);
+
+    if (!deletedExperience) {
+      res.status(404).send();
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default experiencesRouter;

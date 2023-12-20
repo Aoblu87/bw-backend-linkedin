@@ -9,5 +9,6 @@ apiRouter.use(cors());
 
 //Rotta /profile
 apiRouter.use("/profiles", profilesRouter);
+apiRouter.use("/experiences", experiencesRouter);
 
 export default apiRouter;
