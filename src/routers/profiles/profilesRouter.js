@@ -91,6 +91,7 @@ profilesRouter.post("/", async (req, res) => {
       firstName: newUser.firstName,
       lastName: newUser.lastName,
       email: newUser.email,
+      title: newUser.title,
     };
     await newUser.save();
     if (newUser) {
@@ -147,6 +148,33 @@ profilesRouter.put("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+// Authentication - Autenticazione
+// il processo di verifica dell'identità di un utente
+profilesRouter.post("/session", async (req, res, next) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordCorrect) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const payload = { id: user._id };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+  res.status(200).json({ userId: user._id, token });
+});
+
+profilesRouter.delete("/session", async (req, res) => {});
+//Logout;
 
 //DELETE - cancella un utente specifico
 profilesRouter
@@ -339,10 +367,13 @@ profilesRouter
 
   //PATCH - aggiunge un'immagine all'esperienza
   .patch(
-    "/experiences/:id/image",
+    "/experiences/:expId/image",
     cloudinaryUploader,
     async (req, res, next) => {
       try {
+        if (!req.file) {
+          return res.status(400).json({ error: "Nessuna immagine caricata." });
+        }
         console.log(req.file);
         if (!req.file) {
           return res
@@ -350,12 +381,12 @@ profilesRouter
             .json({ error: "Nessun file avatar caricato." });
         }
         let updatedImage = await Experience.findByIdAndUpdate(
-          req.params.id,
-          { image: req.file.path },
+          req.params.expId,
+          { photo: req.file.path },
           { new: true }
         );
         if (!updatedImage) {
-          return res.status(404).json({ error: "Immagine non trovata." });
+          return res.status(404).json({ error: "Esperienza non trovata." });
         } else {
           res.json(updatedImage);
         }
@@ -366,7 +397,7 @@ profilesRouter
   )
 
   //PUT - modifica un'esperienza specifica
-  .put("experiences/:id", async (req, res, next) => {
+  .put("experiences/:expId", async (req, res, next) => {
     try {
       const updatedExperience = await Experience.findByIdAndUpdate(
         req.params.id,
@@ -385,7 +416,7 @@ profilesRouter
   })
 
   //DELETE - elimina un'esperienza specifica
-  .delete("experiences/:id", async (req, res, next) => {
+  .delete("experiences/:expId", async (req, res, next) => {
     try {
       const deletedExperience = await Experience.findByIdAndDelete(
         req.params.id

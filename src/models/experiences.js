@@ -20,7 +20,7 @@ const ExperienceSchema = new Schema({
     type: String,
   },
   workInProgress: {
-    type: "boolean",
+    type: String,
   },
   startDate: {
     type: String,
@@ -33,7 +33,7 @@ const ExperienceSchema = new Schema({
   description: {
     type: String,
   },
-  image: {
+  photo: {
     type: String,
   },
 });
