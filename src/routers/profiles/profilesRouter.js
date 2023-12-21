@@ -177,14 +177,11 @@ profilesRouter
   /* GET - ritorna l'esperienze di tutti gli utenti */
   .get("/:userid/experiences", async (req, res) => {
     try {
-      const experience = await Experience.findByUserId(req.params.userid);
-<<<<<<< Updated upstream
+      const experience = await Experience.findById(req.params.userid);
       if (!experience) {
         return res.status(404).send();
       }
 
-=======
->>>>>>> Stashed changes
       res.json(experience);
     } catch (error) {
       res.status(500).json({ error: error.message });
