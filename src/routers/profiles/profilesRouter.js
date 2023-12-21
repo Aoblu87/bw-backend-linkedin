@@ -18,6 +18,23 @@ profilesRouter.get("/", async (req, res, next) => {
 });
 
 //GET - ritorna l'utente autenticato
+<<<<<<< Updated upstream
+=======
+// NON FUNZIONA FINCHE NON SI INSERISCE NEGLI HEADERS IL TOKEN
+profilesRouter.get("/me", checkJwt, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.me).select("-password");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(req.user);
+  } catch (error) {
+    next(error);
+  }
+});
+>>>>>>> Stashed changes
 
 profilesRouter.get("/:id", checkJwt, async (req, res) => {
   res.status(200).json(req.author);
@@ -126,9 +143,138 @@ profilesRouter.delete("/:id", async (req, res, next) => {
     } else {
       res.status(204).send();
     }
+<<<<<<< Updated upstream
   } catch (error) {
     next(error);
   }
 });
+=======
+  })
+
+  //-------------------------ROTTE EXPERIENCES ----------------------------------
+
+  /* GET - ritorna l'esperienze di un utente */
+  .get("/:userId/experiences", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).send();
+      }
+      const experience = await Experience.find({ "user._id": userId });
+      if (!experience) {
+        return res.status(404).send();
+      }
+
+      res.json(experience);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  })
+
+  /* GET - ritorna le esperienze dell'utente loggato */
+  .get("/:me/experiences", async (req, res) => {
+    try {
+      const user = await User.findById(req.params.me);
+      if (!user) {
+        return res.status(404).json({ messaggio: "Autore non trovato" });
+      }
+      const experience = await Experience.find({ "user._id": id });
+      res.json(experience);
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  //GET di un'esperienza specifica
+  .get("/experiences/:id", async (req, res) => {
+    try {
+      const experience = await Experience.findById(req.params.id);
+      if (!experience) {
+        res.status(404).send();
+      }
+
+      res.json(experience);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  })
+
+  //POST - aggiunge una nuova esperienza
+  // FUNZIONA
+  .post("/experiences", async (req, res, next) => {
+    try {
+      const newExperience = new Experience(req.body);
+
+      await newExperience.save();
+      if (newExperience) {
+        res.status(201).send(newExperience);
+      } else {
+        next(error);
+      }
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  //PATCH - aggiunge un'immagine all'esperienza
+  .patch(
+    "/experiences/:id/image",
+    cloudinaryUploader,
+    async (req, res, next) => {
+      try {
+        console.log(req.file);
+        let updatedImage = await Experience.findByIdAndUpdate(
+          req.params.id,
+          { cover: req.file.path },
+          { new: true }
+        );
+        if (!updatedImage) {
+          return res.status(404).json({ error: "Immagine non trovata." });
+        } else {
+          res.json(updatedImage);
+        }
+      } catch (error) {
+        next(error);
+      }
+    }
+  )
+
+  //PUT - modifica un'esperienza specifica
+  .put("experiences/:id", async (req, res, next) => {
+    try {
+      const updatedExperience = await Experience.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true,
+        }
+      );
+      if (!updatedExperience) {
+        return res.status(404).send();
+      }
+      res.json(updatedExperience);
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  //DELETE - elimina un'esperienza specifica
+  .delete("experiences/:id", async (req, res, next) => {
+    try {
+      const deletedExperience = await Experience.findByIdAndDelete(
+        req.params.id
+      );
+
+      if (!deletedExperience) {
+        res.status(404).send();
+      } else {
+        res.status(204).send();
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+>>>>>>> Stashed changes
 
 export default profilesRouter;

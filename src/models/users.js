@@ -23,7 +23,7 @@ const UserSchema = new Schema({
   country: {
     type: String,
   },
-  postalcCode: {
+  postalCode: {
     type: String,
   },
   city: {
