@@ -181,10 +181,13 @@ profilesRouter
   .get("/:userid/experiences", async (req, res) => {
     try {
       const experience = await Experience.findByUserId(req.params.userid);
+<<<<<<< Updated upstream
       if (!experience) {
         return res.status(404).send();
       }
 
+=======
+>>>>>>> Stashed changes
       res.json(experience);
     } catch (error) {
       res.status(500).json({ error: error.message });
