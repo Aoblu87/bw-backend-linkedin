@@ -37,7 +37,7 @@ profilesRouter.get("/me", checkJwt, async (req, res) => {
 
 //GET - ritorna utente specifico
 
-profilesRouter.get("/:id", async (req, res) => {
+profilesRouter.get("/:id", async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
     if (!user) {
@@ -174,10 +174,10 @@ profilesRouter
 
   //-------------------------ROTTE EXPERIENCES ----------------------------------
 
-  /* GET - ritorna l'esperienze di tutti gli utenti */
-  .get("/:userid/experiences", async (req, res) => {
+  /* GET - ritorna l'esperienze di un utente */
+  .get("/:userId/experiences", async (req, res) => {
     try {
-      const experience = await Experience.findById(req.params.userid);
+      const experience = await Experience.find({}).populate("user");
       if (!experience) {
         return res.status(404).send();
       }
