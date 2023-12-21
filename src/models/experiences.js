@@ -33,7 +33,7 @@ const ExperienceSchema = new Schema({
   description: {
     type: "string",
   },
-  image: {
+  photo: {
     type: "string",
   },
 });
