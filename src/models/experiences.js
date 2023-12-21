@@ -1,9 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
 const ExperienceSchema = new Schema({
-  users: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "users",
+    required: true,
   },
   employmentType: {
     type: "string",
@@ -22,28 +23,19 @@ const ExperienceSchema = new Schema({
     type: "boolean",
   },
   startDate: {
-    month: {
-      type: "date",
-      required: true,
-    },
-    year: {
-      type: "date",
-      required: true,
-    },
+    type: "string",
+    required: true,
   },
   endDate: {
-    month: {
-      type: "date",
-      required: true,
-    },
-    year: {
-      type: "date",
-      required: true,
-    },
+    type: "string",
+    required: true,
   },
   description: {
     type: "string",
   },
+  image: {
+    type: "string",
+  },
 });
 
-export const Experince = mongoose.model("experiences", ExperienceSchema);
+export const Experience = mongoose.model("experiences", ExperienceSchema);
