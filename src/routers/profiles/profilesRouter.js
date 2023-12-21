@@ -224,7 +224,7 @@ profilesRouter
 
   //PATCH - aggiunge un'immagine all'esperienza
   .patch(
-    "experiences/:id/image",
+    "/experiences/:expId/image",
     cloudinaryUploader,
     async (req, res, next) => {
       try {
@@ -233,7 +233,7 @@ profilesRouter
         }
         console.log(req.file);
         let updatedImage = await Experience.findByIdAndUpdate(
-          req.params.id,
+          req.params.expId,
           { photo: req.file.path },
           { new: true }
         );
