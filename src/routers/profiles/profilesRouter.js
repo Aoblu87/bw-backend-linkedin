@@ -249,7 +249,7 @@ profilesRouter
   )
 
   //PUT - modifica un'esperienza specifica
-  .put("experiences/:expId", async (req, res, next) => {
+  .put("/experiences/:expId", async (req, res, next) => {
     try {
       const updatedExperience = await Experience.findByIdAndUpdate(
         req.params.id,
@@ -268,7 +268,7 @@ profilesRouter
   })
 
   //DELETE - elimina un'esperienza specifica
-  .delete("experiences/:expId", async (req, res, next) => {
+  .delete("/experiences/:expId", async (req, res, next) => {
     try {
       const deletedExperience = await Experience.findByIdAndDelete(
         req.params.id
