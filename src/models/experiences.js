@@ -7,34 +7,34 @@ const ExperienceSchema = new Schema({
     required: true,
   },
   employmentType: {
-    type: "string",
+    type: String,
   },
   companyName: {
-    type: "string",
+    type: String,
     required: true,
   },
   location: {
-    type: "string",
+    type: String,
   },
   locationType: {
-    type: "string",
+    type: String,
   },
   workInProgress: {
-    type: "boolean",
+    type: String,
   },
   startDate: {
-    type: "string",
+    type: String,
     required: true,
   },
   endDate: {
-    type: "string",
+    type: String,
     required: true,
   },
   description: {
-    type: "string",
+    type: String,
   },
   photo: {
-    type: "string",
+    type: String,
   },
 });
 
