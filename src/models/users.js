@@ -15,7 +15,9 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function () {
+      return this.googleId ? false : true;
+    },
   },
   title: {
     type: String,
@@ -37,6 +39,12 @@ const UserSchema = new Schema({
   },
   cover: {
     type: String,
+  },
+  googleId: {
+    type: String,
+    required: function () {
+      return this.password ? false : true;
+    },
   },
 });
 

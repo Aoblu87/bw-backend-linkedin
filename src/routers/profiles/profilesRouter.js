@@ -2,13 +2,39 @@ import bcrypt from "bcrypt";
 import express from "express";
 import checkJwt from "../../middlewares/checkJwt.js";
 import jwt from "jsonwebtoken";
-
+import passport from "passport";
 import cloudinaryUploader from "../../middlewares/uploadFile.js";
 import uploadCover from "../../middlewares/uploadCover.js";
 import { User } from "../../models/users.js";
 import { Experience } from "../../models/experiences.js";
 
 const profilesRouter = express.Router();
+
+//Autenticazione con Google
+profilesRouter.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  })
+);
+
+profilesRouter.get(
+  "/google-callback",
+  passport.authenticate("google", {
+    failureRedirect: "/",
+    session: false,
+  }),
+  async (req, res) => {
+    const payload = { id: req.user.id };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    console.log(token);
+    res.redirect(`http://localhost:3000?token=${token}&userId=${req.user.id}`);
+  }
+);
 
 //GET - ritorna tutti gli utenti
 
@@ -23,19 +49,6 @@ profilesRouter.get("/", async (req, res, next) => {
 
 //GET - ritorna l'utente autenticato
 // NON FUNZIONA FINCHE NON SI INSERISCE NEGLI HEADERS IL TOKEN
-/*profilesRouter.get("/me", checkJwt, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.me).select("-password");
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
-    res.status(200).json(req.user);
-  } catch (error) {
-    next(error);
-  }
-});*/
-
 profilesRouter.get("/me", checkJwt, async (req, res) => {
   res.status(200).json(req.user);
 });

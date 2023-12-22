@@ -3,10 +3,14 @@ import mongoose from "mongoose";
 import apiRouter from "./routers/apiRouter.js";
 import list from "express-list-endpoints";
 import { genericError } from "./middlewares/genericError.js";
+import passport from "passport";
+import googleStrategy from "./middlewares/google.js";
 
 const server = express();
 
 const port = 3025;
+
+passport.use(googleStrategy);
 
 //Router API per tutte le rotte
 server.use("/api", apiRouter);
