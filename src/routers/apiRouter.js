@@ -7,6 +7,10 @@ apiRouter.use(express.json());
 
 apiRouter.use(cors());
 
+apiRouter.use(function (req, res, next) {
+  console.log(req.url);
+  next();
+});
 //Rotta /profile
 apiRouter.use("/profiles", profilesRouter);
 

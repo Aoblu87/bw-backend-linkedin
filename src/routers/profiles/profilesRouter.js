@@ -32,7 +32,9 @@ profilesRouter.get(
       expiresIn: "1h",
     });
     console.log(token);
-    res.redirect(`http://localhost:3000?token=${token}&userId=${req.user.id}`);
+    res.redirect(
+      `http://localhost:3000/Main?token=${token}&userId=${req.user.id}`
+    );
   }
 );
 
