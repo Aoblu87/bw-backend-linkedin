@@ -8,6 +8,11 @@ import { User } from "../../models/users.js";
 import { Experience } from "../../models/experiences.js";
 
 const profilesRouter = express.Router();
+//GET UTENTE LOGGATO
+//SERVE
+profilesRouter.get("/me", checkJwt, async (req, res) => {
+  res.status(200).json(req.user);
+});
 
 //GET - ritorna tutti gli utenti
 
@@ -15,21 +20,6 @@ profilesRouter.get("/", async (req, res, next) => {
   try {
     const users = await User.find({});
     res.json(users);
-  } catch (error) {
-    next(error);
-  }
-});
-
-//GET - ritorna l'utente autenticato
-// NON FUNZIONA FINCHE NON SI INSERISCE NEGLI HEADERS IL TOKEN
-profilesRouter.get("/me", checkJwt, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.me).select("-password");
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
-    res.status(200).json(req.user);
   } catch (error) {
     next(error);
   }
@@ -158,24 +148,52 @@ profilesRouter.delete("/session", async (req, res) => {});
 //Logout;
 
 //DELETE - cancella un utente specifico
-profilesRouter
-  .delete("/:id", async (req, res, next) => {
-    try {
-      const deletedUser = await User.findByIdAndDelete(req.params.id);
+profilesRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
 
-      if (!deletedUser) {
-        res.status(404).send();
-      } else {
-        res.status(204).send();
-      }
+    if (!deletedUser) {
+      res.status(404).send();
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+//-------------------------ROTTE EXPERIENCES ----------------------------------
+/* GET - ritorna le esperienze dell'utente loggato */
+// .get("/me/experiences", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const user = await User.findById(id);
+//     if (!user) {
+//       return res.status(404).json({ messaggio: "Autore non trovato" });
+//     }
+//     const experience = await Experience.find({ "user._id": id });
+//     res.json(experience);
+//   } catch (error) {
+//     next(error);
+//   }
+// })
+profilesRouter
+  .get("/me/experiences", checkJwt, async (req, res) => {
+    try {
+      const experiences = await Experience.find({ user: req.user._id });
+      res.json(experiences);
     } catch (error) {
       next(error);
     }
   })
+<<<<<<< Updated upstream
 
   //-------------------------ROTTE EXPERIENCES ----------------------------------
 
   /* GET - ritorna l'esperienze di un utente */
+=======
+  /* GET - ritorna tutte le esperienze di un utente specifico*/
+>>>>>>> Stashed changes
   .get("/:userId/experiences", async (req, res) => {
     try {
       const experience = await Experience.find({}).populate(
@@ -192,6 +210,7 @@ profilesRouter
     }
   })
 
+<<<<<<< Updated upstream
   /* GET - ritorna le esperienze dell'utente loggato */
   .get("/me/experiences", async (req, res) => {
     try {
@@ -203,6 +222,20 @@ profilesRouter
       res.json(experience);
     } catch (error) {
       next(error);
+=======
+  //GET di un'esperienza specifica
+  // FUNZIONA
+  .get("/experiences/:id", async (req, res) => {
+    try {
+      const experience = await Experience.findById(req.params.id);
+      if (!experience) {
+        res.status(404).send();
+      }
+
+      res.json(experience);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+>>>>>>> Stashed changes
     }
   })
 
