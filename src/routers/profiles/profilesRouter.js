@@ -210,18 +210,9 @@ profilesRouter
   /* GET - ritorna tutte le esperienze di un utente specifico*/
   .get("/:userId/experiences", async (req, res) => {
     try {
-<<<<<<< Updated upstream
-      // const { userId } = req.params;
-      // const user = await User.findById(userId);
-      // if (!user) {
-      //   return res.status(404).send();
-      // }
-      const experience = await Experience.find({ user: req.params.userId });
-=======
       const experience = await Experience.find({
         user: req.params.userId,
       }).populate("user", "-_id firstName lastName");
->>>>>>> Stashed changes
       if (!experience) {
         return res.status(404).send();
       }
