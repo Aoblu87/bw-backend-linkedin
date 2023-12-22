@@ -50,6 +50,27 @@ profilesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+// NON FUNZIONA FINCHE NON SI INSERISCE NEGLI HEADERS IL TOKEN
+// profilesRouter.get("/me", checkJwt, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.me).select("-password");
+//     if (!user) {
+//       res.status(404).json({ message: "User not found" });
+//       return;
+//     }
+
+//     res.status(200).json(req.user);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+//GET UTENTE LOGGATO
+//SERVE
+profilesRouter.get("/me", checkJwt, async (req, res) => {
+  res.status(200).json(req.user);
+});
+
 //POST-----Aggiungi un utente e fai HASHING della password
 // PROBLEMA NELLA RESTITUZIONE DEL DATO: MANCA TITLE
 profilesRouter.post("/", async (req, res) => {
@@ -175,13 +196,15 @@ profilesRouter
 
   //-------------------------ROTTE EXPERIENCES ----------------------------------
 
-  /* GET - ritorna l'esperienze di un utente */
+  /* GET - ritorna tutte le esperienze di un utente specifico*/
   .get("/:userId/experiences", async (req, res) => {
     try {
-      const experience = await Experience.find({}).populate(
-        "user",
-        "-_id firstName lastName"
-      );
+      // const { userId } = req.params;
+      // const user = await User.findById(userId);
+      // if (!user) {
+      //   return res.status(404).send();
+      // }
+      const experience = await Experience.find({ user: req.params.userId });
       if (!experience) {
         return res.status(404).send();
       }
@@ -193,9 +216,10 @@ profilesRouter
   })
 
   /* GET - ritorna le esperienze dell'utente loggato */
-  .get("/me/experiences", async (req, res) => {
+  .get("/:me/experiences", async (req, res) => {
     try {
-      const user = await User.findById(req.params.me);
+      const { id } = req.params;
+      const user = await User.findById(id);
       if (!user) {
         return res.status(404).json({ messaggio: "Autore non trovato" });
       }
@@ -206,7 +230,23 @@ profilesRouter
     }
   })
 
+  //GET di un'esperienza specifica
+  // FUNZIONA
+  .get("/experiences/:id", async (req, res) => {
+    try {
+      const experience = await Experience.findById(req.params.id);
+      if (!experience) {
+        res.status(404).send();
+      }
+
+      res.json(experience);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  })
+
   //POST - aggiunge una nuova esperienza
+  // FUNZIONA
   .post("/experiences", async (req, res, next) => {
     try {
       const newExperience = new Experience(req.body);
@@ -232,6 +272,11 @@ profilesRouter
           return res.status(400).json({ error: "Nessuna immagine caricata." });
         }
         console.log(req.file);
+        if (!req.file) {
+          return res
+            .status(400)
+            .json({ error: "Nessun file avatar caricato." });
+        }
         let updatedImage = await Experience.findByIdAndUpdate(
           req.params.expId,
           { photo: req.file.path },
@@ -249,10 +294,11 @@ profilesRouter
   )
 
   //PUT - modifica un'esperienza specifica
+  //FUNZIONA
   .put("/experiences/:expId", async (req, res, next) => {
     try {
       const updatedExperience = await Experience.findByIdAndUpdate(
-        req.params.id,
+        req.params.expId,
         req.body,
         {
           new: true,
@@ -268,10 +314,11 @@ profilesRouter
   })
 
   //DELETE - elimina un'esperienza specifica
+  //FUNZIONA
   .delete("/experiences/:expId", async (req, res, next) => {
     try {
       const deletedExperience = await Experience.findByIdAndDelete(
-        req.params.id
+        req.params.expId
       );
 
       if (!deletedExperience) {
