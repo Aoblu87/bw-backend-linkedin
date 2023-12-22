@@ -35,6 +35,9 @@ const UserSchema = new Schema({
   photo: {
     type: String,
   },
+  cover: {
+    type: String,
+  },
 });
 
 export const User = mongoose.model("users", UserSchema);

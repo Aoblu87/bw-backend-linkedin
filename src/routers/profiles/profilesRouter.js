@@ -4,6 +4,7 @@ import checkJwt from "../../middlewares/checkJwt.js";
 import jwt from "jsonwebtoken";
 
 import cloudinaryUploader from "../../middlewares/uploadFile.js";
+import uploadCover from "../../middlewares/uploadCover.js";
 import { User } from "../../models/users.js";
 import { Experience } from "../../models/experiences.js";
 
@@ -50,21 +51,6 @@ profilesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-// NON FUNZIONA FINCHE NON SI INSERISCE NEGLI HEADERS IL TOKEN
-// profilesRouter.get("/me", checkJwt, async (req, res) => {
-//   try {
-//     const user = await User.findById(req.params.me).select("-password");
-//     if (!user) {
-//       res.status(404).json({ message: "User not found" });
-//       return;
-//     }
-
-//     res.status(200).json(req.user);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 //GET UTENTE LOGGATO
 //SERVE
 profilesRouter.get("/me", checkJwt, async (req, res) => {
@@ -107,7 +93,7 @@ profilesRouter.post("/", async (req, res) => {
   }
 });
 
-//PATCH - aggiunge l'immagine di un utente specifico
+//PATCH FOTO UTENTE- aggiunge l'immagine di un utente specifico
 // FUNZIONA
 profilesRouter.patch(
   "/:id/photo",
@@ -133,6 +119,28 @@ profilesRouter.patch(
     }
   }
 );
+//PATCH  COVER- aggiunge cover sfondo del profile utente
+// FUNZIONA
+profilesRouter.patch("/:id/cover", uploadCover, async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Nessun file avatar caricato." });
+    }
+    console.log(req.file);
+    let updatedCover = await User.findByIdAndUpdate(
+      req.params.id,
+      { cover: req.file.path },
+      { new: true }
+    ).select("-password");
+    if (!updatedCover) {
+      return res.status(404).json({ error: "Autore non trovato." });
+    } else {
+      res.json(updatedCover);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 //PUT - modifica un utente specifico
 // FUNZIONA; MA DOBBIAMO CONSIDERARE SE DAVVERO UTILE NEL ProcessingInstruction; POICHé PER UTILIZZARLA TUTTI I CAMPI DEVONO ESSERE CAMBIATI O CONFERMATI
@@ -176,7 +184,6 @@ profilesRouter.post("/session", async (req, res, next) => {
 });
 
 profilesRouter.delete("/session", async (req, res) => {});
-//Logout;
 
 //DELETE - cancella un utente specifico
 profilesRouter
